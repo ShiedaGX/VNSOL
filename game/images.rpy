@@ -1,6 +1,6 @@
 # Gambar placeholder agar game bisa langsung dijalankan.
 #
-# Untuk mengganti dengan gambar asli, taruh file di folder game/images/
+
 # dengan nama yang sama, misalnya:
 #   game/images/bg rumah.png
 #   game/images/mila happy.png
@@ -28,10 +28,8 @@ init python:
 
 ## Sprite karakter #############################################################
 
-init python:
-
-    for ekspresi in ("normal", "happy", "surprised", "tease"):
-        renpy.image(("mila", ekspresi), Placeholder("girl"))
-
-    for ekspresi in ("normal", "tired", "smirk", "soft"):
-        renpy.image(("luna", ekspresi), Placeholder("girl"))
+# Sprite Mila dan Luna dimuat otomatis dari folder game/images/ berdasarkan
+# nama file, tidak perlu didefinisikan di sini:
+#   mila normal / happy / surprised / tease
+#   luna normal / tired / smirk / soft
+# Untuk mengganti dengan ilustrasi sendiri, timpa file PNG dengan nama yang sama.
