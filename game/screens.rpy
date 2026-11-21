@@ -4,6 +4,9 @@
 
 init offset = -1
 
+## Hover highlight shared by the main menu and game menu buttons.
+define mm_hover_bg = Fixed(Solid("#ffffff1c"), Solid("#ffb27a", xsize=6, xalign=0.0))
+
 
 ################################################################################
 ## Styles
@@ -248,14 +251,14 @@ screen quick_menu():
             xalign 0.5
             yalign 1.0
 
-            textbutton _("Back") action Rollback()
-            textbutton _("History") action ShowMenu('history')
-            textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
+            textbutton _("Kembali") action Rollback()
+            textbutton _("Riwayat") action ShowMenu('history')
+            textbutton _("Lewati") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Save") action ShowMenu('save')
-            textbutton _("Q.Save") action QuickSave()
-            textbutton _("Q.Load") action QuickLoad()
-            textbutton _("Prefs") action ShowMenu('preferences')
+            textbutton _("Simpan") action ShowMenu('save')
+            textbutton _("Q.Simpan") action QuickSave()
+            textbutton _("Q.Muat") action QuickLoad()
+            textbutton _("Opsi") action ShowMenu('preferences')
 
 
 ## This code ensures that the quick_menu screen is displayed in-game, whenever
@@ -296,38 +299,38 @@ screen navigation():
 
         if main_menu:
 
-            textbutton _("Start") action Start()
+            textbutton _("Mulai") action Start()
 
         else:
 
-            textbutton _("History") action ShowMenu("history")
+            textbutton _("Riwayat") action ShowMenu("history")
 
-            textbutton _("Save") action ShowMenu("save")
+            textbutton _("Simpan") action ShowMenu("save")
 
-        textbutton _("Load") action ShowMenu("load")
+        textbutton _("Muat") action ShowMenu("load")
 
-        textbutton _("Preferences") action ShowMenu("preferences")
+        textbutton _("Pengaturan") action ShowMenu("preferences")
 
         if _in_replay:
 
-            textbutton _("End Replay") action EndReplay(confirm=True)
+            textbutton _("Akhiri Replay") action EndReplay(confirm=True)
 
         elif not main_menu:
 
-            textbutton _("Main Menu") action MainMenu()
+            textbutton _("Menu Utama") action MainMenu()
 
-        textbutton _("About") action ShowMenu("about")
+        textbutton _("Tentang") action ShowMenu("about")
 
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
 
             ## Help isn't necessary or relevant to mobile devices.
-            textbutton _("Help") action ShowMenu("help")
+            textbutton _("Bantuan") action ShowMenu("help")
 
         if renpy.variant("pc"):
 
             ## The quit button is banned on iOS and unnecessary on Android and
             ## Web.
-            textbutton _("Quit") action Quit(confirm=not main_menu)
+            textbutton _("Keluar") action Quit(confirm=not main_menu)
 
 
 style navigation_button is gui_button
@@ -336,9 +339,17 @@ style navigation_button_text is gui_button_text
 style navigation_button:
     size_group "navigation"
     properties gui.button_properties("navigation_button")
+    left_padding 30
+    right_padding 20
+    hover_background mm_hover_bg
 
 style navigation_button_text:
     properties gui.text_properties("navigation_button")
+    size 38
+    kerning 2
+    idle_color "#d6cbea"
+    hover_color "#ffd9b0"
+    selected_color "#ffffff"
 
 
 ## Main Menu screen ############################################################
@@ -416,8 +427,6 @@ transform mm_button_in(delay=0.0):
     on idle:
         easeout 0.2 xoffset 0
 
-
-define mm_hover_bg = Fixed(Solid("#ffffff1c"), Solid("#ffb27a", xsize=6, xalign=0.0))
 
 style mm_vbox is vbox
 style mm_button is button
@@ -530,7 +539,7 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     use navigation
 
-    textbutton _("Return"):
+    textbutton _("Kembali"):
         style "return_button"
 
         action Return()
@@ -607,7 +616,7 @@ screen about():
     ## This use statement includes the game_menu screen inside this one. The
     ## vbox child is then included inside the viewport inside the game_menu
     ## screen.
-    use game_menu(_("About"), scroll="viewport"):
+    use game_menu(_("Tentang"), scroll="viewport"):
 
         style_prefix "about"
 
@@ -644,14 +653,14 @@ screen save():
 
     tag menu
 
-    use file_slots(_("Save"))
+    use file_slots(_("Simpan"))
 
 
 screen load():
 
     tag menu
 
-    use file_slots(_("Load"))
+    use file_slots(_("Muat"))
 
 
 screen file_slots(title):
@@ -788,7 +797,7 @@ screen preferences():
 
     tag menu
 
-    use game_menu(_("Preferences"), scroll="viewport"):
+    use game_menu(_("Pengaturan"), scroll="viewport"):
 
         vbox:
 
@@ -805,7 +814,7 @@ screen preferences():
 
                 vbox:
                     style_prefix "check"
-                    label _("Skip")
+                    label _("Lewati")
                     textbutton _("Unseen Text") action Preference("skip", "toggle")
                     textbutton _("After Choices") action Preference("after choices", "toggle")
                     textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle"))
@@ -951,7 +960,7 @@ screen history():
     ## Avoid predicting this screen, as it can be very large.
     predict False
 
-    use game_menu(_("History"), scroll=("vpgrid" if gui.history_height else "viewport"), yinitial=1.0, spacing=gui.history_spacing):
+    use game_menu(_("Riwayat"), scroll=("vpgrid" if gui.history_height else "viewport"), yinitial=1.0, spacing=gui.history_spacing):
 
         style_prefix "history"
 
@@ -1038,7 +1047,7 @@ screen help():
 
     default device = "keyboard"
 
-    use game_menu(_("Help"), scroll="viewport"):
+    use game_menu(_("Bantuan"), scroll="viewport"):
 
         style_prefix "help"
 
@@ -1226,8 +1235,8 @@ screen confirm(message, yes_action, no_action):
                 xalign 0.5
                 spacing 150
 
-                textbutton _("Yes") action yes_action
-                textbutton _("No") action no_action
+                textbutton _("Ya") action yes_action
+                textbutton _("Tidak") action no_action
 
     ## Right-click and escape answer "no".
     key "game_menu" action no_action
@@ -1582,8 +1591,8 @@ screen quick_menu():
             xalign 0.5
             yalign 1.0
 
-            textbutton _("Back") action Rollback()
-            textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
+            textbutton _("Kembali") action Rollback()
+            textbutton _("Lewati") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Auto") action Preference("auto-forward", "toggle")
             textbutton _("Menu") action ShowMenu()
 
