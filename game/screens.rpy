@@ -354,53 +354,111 @@ screen main_menu():
 
     add gui.main_menu_background
 
-    ## This empty frame darkens the main menu.
-    frame:
-        style "main_menu_frame"
+    ## Gradient panel behind the menu so text stays readable.
+    add "gui/overlay/main_menu_panel.png" at mm_panel_in
 
-    ## The use statement includes another screen inside this one. The actual
-    ## contents of the main menu are in the navigation screen.
-    use navigation
+    ## Title block.
+    vbox:
+        xpos 130
+        ypos 130
+        spacing 6
+        at mm_fade_in(0.25)
 
-    if gui.show_name:
+        text _("A  VISUAL  NOVEL") style "mm_kicker"
 
-        vbox:
-            style "main_menu_vbox"
+        if gui.show_name:
+            text "[config.name!t]" style "mm_title"
 
-            text "[config.name!t]":
-                style "main_menu_title"
+        text _("Setiap hari adalah awal cerita baru.") style "mm_tagline"
 
-            text "[config.version]":
-                style "main_menu_version"
+    ## Menu buttons.
+    vbox:
+        style_prefix "mm"
+        xpos 130
+        ypos 440
+        spacing 6
+
+        textbutton _("Mulai") action Start() at mm_button_in(0.45)
+        textbutton _("Lanjutkan") action ShowMenu("load") at mm_button_in(0.55)
+        textbutton _("Pengaturan") action ShowMenu("preferences") at mm_button_in(0.65)
+        textbutton _("Tentang") action ShowMenu("about") at mm_button_in(0.75)
+
+        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+            textbutton _("Bantuan") action ShowMenu("help") at mm_button_in(0.85)
+
+        if renpy.variant("pc"):
+            textbutton _("Keluar") action Quit(confirm=not main_menu) at mm_button_in(0.95)
+
+    ## Footer.
+    text "v[config.version]  ·  Dibuat dengan Ren'Py":
+        style "mm_footer"
+        xpos 130
+        yalign 1.0
+        yoffset -40
 
 
-style main_menu_frame is empty
-style main_menu_vbox is vbox
-style main_menu_text is gui_text
-style main_menu_title is main_menu_text
-style main_menu_version is main_menu_text
+## Entrance animations for the main menu.
+transform mm_panel_in:
+    xoffset -300 alpha 0.0
+    easein_cubic 0.7 xoffset 0 alpha 1.0
 
-style main_menu_frame:
-    xsize 420
-    yfill True
+transform mm_fade_in(delay=0.0):
+    alpha 0.0 yoffset 24
+    pause delay
+    easein_cubic 0.7 alpha 1.0 yoffset 0
 
-    background "gui/overlay/main_menu.png"
+transform mm_button_in(delay=0.0):
+    alpha 0.0 xoffset -60
+    pause delay
+    easein_cubic 0.5 alpha 1.0 xoffset 0
+    on hover:
+        easeout 0.15 xoffset 18
+    on idle:
+        easeout 0.2 xoffset 0
 
-style main_menu_vbox:
-    xalign 1.0
-    xoffset -30
-    xmaximum 1200
-    yalign 1.0
-    yoffset -30
 
-style main_menu_text:
-    properties gui.text_properties("main_menu", accent=True)
+define mm_hover_bg = Fixed(Solid("#ffffff1c"), Solid("#ffb27a", xsize=6, xalign=0.0))
 
-style main_menu_title:
-    properties gui.text_properties("title")
+style mm_vbox is vbox
+style mm_button is button
+style mm_button_text is button_text
 
-style main_menu_version:
-    properties gui.text_properties("version")
+style mm_button:
+    xsize 520
+    left_padding 36
+    right_padding 20
+    top_padding 10
+    bottom_padding 10
+    background None
+    hover_background mm_hover_bg
+
+style mm_button_text:
+    font gui.interface_text_font
+    size 42
+    kerning 2
+    idle_color "#d6cbea"
+    hover_color "#ffd9b0"
+    selected_color "#ffffff"
+    insensitive_color "#8888887f"
+
+style mm_kicker is gui_text:
+    size 24
+    color "#ffb27a"
+    kerning 6
+
+style mm_title is gui_text:
+    size 118
+    color "#ffffff"
+    outlines [ (4, "#1a123655", 3, 3) ]
+
+style mm_tagline is gui_text:
+    size 28
+    color "#e4d9f5"
+    italic True
+
+style mm_footer is gui_text:
+    size 22
+    color "#9d92b8"
 
 
 ## Game Menu screen ############################################################
