@@ -1,33 +1,41 @@
-﻿# The script of the game goes in this file.
-
-# Declare characters used by this game. The color argument colorizes the
-# name of the character.
-
-define e = Character("Eileen")
+﻿# Naskah utama College Life.
+# Karakter, variabel, dan pintu masuk cerita ada di file ini.
+# Isi cerita per bab ada di file terpisah (bab1.rpy, dst).
 
 
-# The game starts here.
+## Karakter ####################################################################
+
+# Nama protagonis bisa diganti pemain. Default-nya "Rael".
+default player_name = "Rael"
+
+define r = Character("[player_name]", color="#ffb27a")
+define mila = Character("Tante Mila", color="#f7a8c4")
+define luna = Character("Luna", color="#9ad1ff")
+define ibu = Character("Ibu (pesan)", color="#c9b8ff")
+
+
+## Variabel cerita #############################################################
+
+# Poin kedekatan, dipengaruhi pilihan pemain.
+default mila_aff = 0
+default luna_aff = 0
+
+
+## Awal permainan ##############################################################
 
 label start:
 
-    # Show a background. This uses a placeholder by default, but you can
-    # add a file (named either "bg room.png" or "bg room.jpg") to the
-    # images directory to show it.
+    scene black with fade
 
-    scene bg room
+    "Sebelum cerita dimulai..."
 
-    # This shows a character sprite. A placeholder is used, but you can
-    # replace it by adding a file named "eileen happy.png" to the images
-    # directory.
+    menu:
+        "Siapa yang akan kamu perankan?"
 
-    show eileen happy
+        "Rael (nama asli karakter)":
+            $ player_name = "Rael"
 
-    # These display lines of dialogue.
+        "Aku ingin memakai namaku sendiri":
+            $ player_name = (renpy.input("Siapa namamu?", default="Rael", length=12, exclude="{}[]%") or "").strip() or "Rael"
 
-    e "You've created a new Ren'Py game."
-
-    e "Once you add a story, pictures, and music, you can release it to the world!"
-
-    # This ends the game.
-
-    return
+    jump bab1
