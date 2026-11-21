@@ -1,10 +1,10 @@
-# Gambar placeholder agar game bisa langsung dijalankan.
+# Definisi gambar latar. Latar rumah, kamar, mobil, dan terminal masih berupa
+# placeholder; sprite karakter dimuat otomatis dari folder game/images/.
 #
-
+# Untuk mengganti latar dengan gambar asli, taruh file di game/images/
 # dengan nama yang sama, misalnya:
 #   game/images/bg rumah.png
-#   game/images/mila happy.png
-# lalu hapus baris image yang bersangkutan di file ini.
+# lalu hapus baris renpy.image yang bersangkutan di bawah.
 
 
 ## Latar #######################################################################
